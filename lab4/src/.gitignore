@@ -1,0 +1,7 @@
+*.o
+*.a
+parallel_min_max
+process_memory
+zombie
+psum
+min_max_*.tmp
