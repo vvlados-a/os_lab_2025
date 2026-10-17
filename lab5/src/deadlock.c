@@ -11,7 +11,7 @@ static void *first(void *arg) {
     pthread_mutex_lock(&a);
     puts("Thread 1: locked A, waiting for B");
     pthread_barrier_wait(&barrier);
-    pthread_mutex_lock(&b);  /* B is held by the other thread. */
+    pthread_mutex_lock(&b);
     return NULL;
 }
 
@@ -20,7 +20,7 @@ static void *second(void *arg) {
     pthread_mutex_lock(&b);
     puts("Thread 2: locked B, waiting for A");
     pthread_barrier_wait(&barrier);
-    pthread_mutex_lock(&a);  /* A is held by the other thread. */
+    pthread_mutex_lock(&a);
     return NULL;
 }
 
