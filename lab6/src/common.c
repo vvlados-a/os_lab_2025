@@ -15,7 +15,6 @@ uint64_t MultModulo(uint64_t a, uint64_t b, uint64_t mod) {
   return result;
 }
 
-// TCP can transfer fewer bytes than requested in a single call.
 bool SendAll(int fd, const void *data, size_t size) {
   const char *bytes = data;
   size_t sent = 0;
