@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* The same source is compiled with and without -DUSE_MUTEX. */
 static int common = 0;
 static pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 
