@@ -1,0 +1,44 @@
+name: osis-lab8
+services:
+  minio:
+    image: osis-lab8-minio:2025-09-07
+    build:
+      context: .
+      target: minio
+    command: ["server", "/data", "--console-address", ":9001"]
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    environment:
+      # Только учебные локальные credentials, не реальные секреты.
+      MINIO_ROOT_USER: lab8demo
+      MINIO_ROOT_PASSWORD: lab8-local-only-password
+    volumes:
+      - minio-data:/data
+  tools:
+    image: osis-lab8-tools:1
+    build:
+      context: .
+      target: tools
+    depends_on: [minio]
+    cap_add: [SYS_ADMIN]
+    devices: ["/dev/fuse:/dev/fuse"]
+    security_opt: ["apparmor:unconfined"]
+    environment:
+      S3_ENDPOINT: http://minio:9000
+      AWS_ACCESS_KEY_ID: lab8demo
+      AWS_SECRET_ACCESS_KEY: lab8-local-only-password
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_EC2_METADATA_DISABLED: "true"
+    volumes:
+      - hybrid-data:/data
+      - ./results:/results
+    healthcheck:
+      test: ["CMD-SHELL", "mountpoint -q /mnt/s3fs && mountpoint -q /mnt/goofys && mountpoint -q /mnt/warm"]
+      interval: 5s
+      timeout: 3s
+      retries: 24
+    stop_grace_period: 30s
+volumes:
+  minio-data:
+  hybrid-data:
